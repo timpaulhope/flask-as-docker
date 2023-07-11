@@ -1,39 +1,60 @@
-To build and run this Flask app in Docker, you can follow these steps:
+# How To - Create a basic flask app as a Docker container
 
-**Note: Make sure you have Docker installed and running on your machine before proceeding with these steps.**
+This repo provides a simple example of how to get a flask app up and running as a docker container on a Linux machine.
 
-1. Open the `requirements.txt` and `app.py` files in the project directory to familiarize yourself with what they contain. These files define the dependencies and the code of the Flask app, respectively.
+## The Files
 
-2. Open the `Dockerfile` file and review its contents. This file contains the instructions for building the Docker image that will run the Flask app.
+| File             | Role                                                                                      |
+| :--------------- | :---------------------------------------------------------------------------------------- |
+| app.py           | A simple flask app that returns the current datetime on the machine                        |
+| config.yaml      | A config file that sets variables used in `app.py`                                             |
+| Dockerfile       | The instruction file that will build the Docker image                                     |
+| requirements.txt | A file used by the `Dockerfile` to install libraries used by `app.py` in the Docker image |
 
-3. Open a terminal or command prompt and navigate to the project directory where the `Dockerfile` is located.
+## Build
 
-4. Build the Docker image by running the following command:
+>**Note: Before proceeding with these steps:** 
+>+ Make sure you have Docker installed on your host machine.
+>+ Things will go smoother if you have familiarized yourself with the content of the four files listed above.
+>+ Do your homework on how to start, stop, and remove docker containers as you'll be on your own for that part.
+>+ It is highly recommended installing [Portainer](https://www.portainer.io/) on the host machine to help simplify keeping your docker environment clean.
 
-```bash
-docker build -t my-flask-app .
-```
+To build and run `app.py` in Docker, you can follow these steps:
 
-This command builds the Docker image using the `Dockerfile` in the current directory (`.`) and assigns it the tag `my-flask-app`. You can choose a different tag name if you prefer.
+1. Download all the files in this repo to a project directory on the host machine you want to run the container on.
 
-5. Once the image is built, you can run a Docker container from the terminal using the following command:
+2. In the terminal of the host machine, navigate to the project directory where the `Dockerfile` is located.
 
-```bash
-docker run -p 5000:5000 my-flask-app
-```
-
-This command starts a Docker container from the `my-flask-app` image and maps port 5000 of the container to port 5000 of the host machine. Adjust the port mapping as needed.
-
-6. The Flask app should now be running in the Docker container. You can access it by visiting `http://localhost:5000` in your web browser.
-
-**Additional Options:**
-
-- If you want to run the container in the background and assign it a name, you can use the `-d` (detach) and `--name` options:
+3. Build the Docker image by running the following command:
 
 ```bash
-docker run -d -p 5000:5000 --name my_flask_app my-flask-app
+sudo docker build -t my-flask-app .
 ```
 
-This command runs the container in the background (`-d`), maps the ports (`-p`), assigns the name `my_flask_app` (`--name`), and specifies the image to use (`my-flask-app`).
+>This command builds the Docker image using the instruction from `Dockerfile` in the current directory (`.`) and assigns it the tag `my-flask-app`. You can choose a different tag name if you prefer.
 
-With these steps, you can build and run the Flask app in a Docker container.
+4. Once the image is built (may take some time), you can generate a Docker container from the terminal using the following command:
+
+```bash
+sudo docker run -d -p 5000:5000 --name my_flask_app my-flask-app
+```
+
+>This command starts a Docker container from the `my-flask-app` image with the name `my_flask_app` and maps port 5000 of the container to port 5000 of the host machine (Adjust the port mapping as needed).
+
+5. With the Flask app running in Docker, You can access it by visiting `http://localhost:5000` in your web browser.
+
+6. To stop the container from the terminal, use the following command
+
+```bash
+sudo docker stop my_flask_app
+```
+7. And to start the container up again from the terminal, use the following command
+
+```bash
+sudo docker start my_flask_app
+```
+
+## Customisation
+
+You can customize this process by swapping out the `app.py` script for an alternate Flask app with the same name.  
+If you do, remember that you will need to update the `config.yaml` and `requirements.txt` files to reflect the libraries required by the alternate script.
