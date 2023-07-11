@@ -5,7 +5,6 @@ import yaml
 from pytz import timezone
 import pytz
 
-
 ## == Setup ====
 app = Flask(__name__)
 api = Api(app)
@@ -16,20 +15,20 @@ def load_configuration(file_path):
         config = yaml.safe_load(f)
     return config
 
-
 class JsonOut(Resource):
     """Generate simple json packet to display."""
     def get(self):
+        # Load Config and get tz 
         config = load_configuration('config.yaml')
         strtz = config['flask']['tz']
-        # Define the ZUL time
+        
+        # Define the ZUL time and convert to tz
         zul_time = datetime.now(tz=pytz.utc)
-
-        # Convert the ZUL time to Auckland Pacific time
         target_time = zul_time.astimezone(timezone(strtz))
+        
+        # Generate out json
         now_out = target_time.strftime("%Y-%m-%d %H:%M:%S")
         return {'timezone': strtz, 'time': now_out}
-
 
 # == add the json out as a resource ==
 api.add_resource(JsonOut, '/')
